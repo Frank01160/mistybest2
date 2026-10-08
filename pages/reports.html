@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports — Misty Code</title>
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/particles.css" />
+  <link rel="stylesheet" href="../css/reports.css" />
+</head>
+<body>
+  <script>
+    (function () {
+      var savedTheme = localStorage.getItem("mc_theme");
+      if (savedTheme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      var savedPalette = localStorage.getItem("mc_palette");
+      if (savedPalette) document.documentElement.setAttribute("data-palette", savedPalette);
+    })();
+  </script>
+
+  <header class="app-header">
+    <div class="logo" id="headerLogo">
+      <span class="logo-badge" id="logoBadge">MC</span>
+      <span class="logo-name" id="logoName">Misty Code</span>
+    </div>
+    <nav class="app-nav">
+      <a href="pos.html" class="nav-link">Sell</a>
+      <a href="reports.html" class="nav-link active">Reports</a>
+      <a href="withdrawals.html" class="nav-link">Deposit/Withdraw</a>
+      <a href="credit.html" class="nav-link">Credit</a>
+      <a href="manager.html" class="nav-link manager-only hidden">Inventory</a>
+    </nav>
+    <div class="app-header-right">
+      <div class="conn-badge conn-online" id="connBadge"><span class="dot"></span><span id="connText">Online</span></div>
+      <div class="user-chip"><span class="badge badge-seller" id="roleBadge">Seller</span><span id="userName">—</span></div>
+      <button class="btn btn-ghost" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <main class="reports-layout">
+    <div class="reports-toolbar">
+      <div class="filter-group">
+        <div class="field"><label for="fromDateInput">From</label><input type="date" id="fromDateInput" /></div>
+        <div class="field"><label for="toDateInput">To</label><input type="date" id="toDateInput" /></div>
+        <div class="field">
+          <label for="paymentFilterSelect">Payment method</label>
+          <select id="paymentFilterSelect">
+            <option value="all">All</option>
+            <option value="cash">Includes cash</option>
+            <option value="shop_mpesa">Includes Shop M-Pesa</option>
+            <option value="manager_mpesa">Includes Manager M-Pesa</option>
+            <option value="mobile_withdrawal">Includes mobile withdrawal</option>
+            <option value="credit">Includes credit</option>
+          </select>
+        </div>
+        <div class="quick-ranges">
+          <button class="btn btn-outline btn-sm" data-range="today">Today</button>
+          <button class="btn btn-outline btn-sm" data-range="week">This week</button>
+          <button class="btn btn-outline btn-sm" data-range="month">This month</button>
+        </div>
+      </div>
+      <div class="export-group"><button class="btn btn-outline" id="exportCsvBtn">⬇ CSV</button><button class="btn btn-outline" id="exportPdfBtn">⬇ PDF</button></div>
+    </div>
+
+    <div class="summary-cards">
+      <div class="card summary-card"><span class="summary-label">Total sales</span><span class="summary-value" id="summaryTotal">KSh 0</span></div>
+      <div class="card summary-card"><span class="summary-label">Transactions</span><span class="summary-value" id="summaryCount">0</span></div>
+      <div class="card summary-card"><span class="summary-label">Cash collected</span><span class="summary-value cash-value" id="summaryCash">KSh 0</span></div>
+      <div class="card summary-card"><span class="summary-label">Shop M-Pesa collected</span><span class="summary-value mobile-value" id="summaryShopMpesa">KSh 0</span></div>
+      <div class="card summary-card"><span class="summary-label">Manager M-Pesa collected</span><span class="summary-value mobile-value" id="summaryManagerMpesa">KSh 0</span></div>
+    </div>
+
+    <div class="summary-cards credit-summary-cards">
+      <div class="card summary-card"><span class="summary-label">Sold on credit (new)</span><span class="summary-value credit-value" id="summaryCreditSold">KSh 0</span></div>
+      <div class="card summary-card"><span class="summary-label">Credit repayments collected</span><span class="summary-value cash-value" id="summaryCreditCollected">KSh 0</span></div>
+    </div>
+
+    <div class="card cash-reconcile-card hidden" id="cashReconcileCard">
+      <div class="reconcile-row"><span>Cash collected (gross, incl. credit repayments)</span><span id="reconcileGross">KSh 0</span></div>
+      <div class="reconcile-row"><span>Less: withdrawals funded from today's sales cash</span><span id="reconcileDeducted">− KSh 0</span></div>
+      <div class="reconcile-row reconcile-net"><span>Net cash in the till</span><span id="reconcileNet">KSh 0</span></div>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Receipt #</th><th>Date/time</th><th>Customer</th><th>Items</th><th>Discount</th><th>Total</th><th>Payment</th><th>Served by</th></tr></thead>
+        <tbody id="salesTableBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state hidden" id="salesEmpty"><h3>No sales in this range</h3><p>Try widening your date filter.</p></div>
+  </main>
+
+  <div class="modal-overlay hidden" id="saleDetailOverlay">
+    <div class="modal" id="saleDetailModal">
+      <div class="modal-header"><h3 id="saleDetailTitle">Sale detail</h3><button class="btn btn-ghost btn-sm" id="saleDetailClose">✕</button></div>
+      <div id="saleDetailBody"></div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/logo.js"></script>
+  <script src="../js/connectivity.js"></script>
+  <script src="../js/particles.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deposit / Withdraw — Misty Code</title>
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/particles.css" />
+  <link rel="stylesheet" href="../css/withdrawals.css" />
+</head>
+<body>
+  <script>
+    (function () {
+      var savedTheme = localStorage.getItem("mc_theme");
+      if (savedTheme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      var savedPalette = localStorage.getItem("mc_palette");
+      if (savedPalette) document.documentElement.setAttribute("data-palette", savedPalette);
+    })();
+  </script>
+
+  <header class="app-header">
+    <div class="logo" id="headerLogo">
+      <span class="logo-badge" id="logoBadge">MC</span>
+      <span class="logo-name" id="logoName">Misty Code</span>
+    </div>
+    <nav class="app-nav">
+      <a href="pos.html" class="nav-link">Sell</a>
+      <a href="reports.html" class="nav-link">Reports</a>
+      <a href="withdrawals.html" class="nav-link active">Deposit/Withdraw</a>
+      <a href="credit.html" class="nav-link">Credit</a>
+      <a href="manager.html" class="nav-link manager-only hidden">Inventory</a>
+    </nav>
+    <div class="app-header-right">
+      <div class="conn-badge conn-online" id="connBadge"><span class="dot"></span><span id="connText">Online</span></div>
+      <div class="user-chip"><span class="badge badge-seller" id="roleBadge">Seller</span><span id="userName">—</span></div>
+      <button class="btn btn-ghost" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <main class="wd-layout">
+    <div class="balance-cards">
+      <div class="card balance-card"><span class="summary-label">Float</span><span class="summary-value" id="floatBalanceValue">KSh 0</span></div>
+      <div class="card balance-card"><span class="summary-label">Withdrawal cash</span><span class="summary-value" id="cashBalanceValue">KSh 0</span></div>
+    </div>
+
+    <div class="wd-tabs" role="tablist">
+      <button class="tab-btn active" data-tab="entry">New transaction</button>
+      <button class="tab-btn" data-tab="adjust">Adjust balance</button>
+      <button class="tab-btn" data-tab="history">History</button>
+    </div>
+
+    <!-- ===== NEW TRANSACTION ===== -->
+    <section class="tab-panel anim-page-in" id="panel-entry">
+      <div class="card entry-card">
+        <div class="field">
+          <span class="field-label-standalone">Transaction type</span>
+          <div class="wd-type-toggle">
+            <button type="button" class="wd-type-btn active" data-wd-type="deposit">⬇ Deposit</button>
+            <button type="button" class="wd-type-btn" data-wd-type="withdrawal">⬆ Withdrawal</button>
+          </div>
+        </div>
+        <div class="field"><label for="wdBankSelect">Bank / channel</label><select id="wdBankSelect"><option value="">Select a bank…</option></select></div>
+        <div class="field"><label for="wdCustomerInput">Customer name (optional)</label><input type="text" id="wdCustomerInput" placeholder="Walk-in customer" /></div>
+        <div class="field"><label for="wdAmountInput">Amount (KSh)</label><input type="number" id="wdAmountInput" min="1" step="1" placeholder="e.g. 5000" /><span class="hint">Whole shillings only.</span></div>
+        <button class="btn btn-primary wd-confirm-btn" id="wdSubmitBtn" disabled>Continue</button>
+      </div>
+    </section>
+
+    <!-- ===== ADJUST BALANCE ===== -->
+    <section class="tab-panel hidden" id="panel-adjust">
+      <div class="card entry-card">
+        <div class="field">
+          <span class="field-label-standalone">Which balance</span>
+          <div class="wd-type-toggle">
+            <button type="button" class="wd-type-btn active" data-adjust-pool="float">Float</button>
+            <button type="button" class="wd-type-btn" data-adjust-pool="cash">Withdrawal cash</button>
+          </div>
+        </div>
+        <div class="field">
+          <span class="field-label-standalone">Direction</span>
+          <div class="wd-type-toggle">
+            <button type="button" class="wd-type-btn active" data-adjust-dir="add">+ Add</button>
+            <button type="button" class="wd-type-btn" data-adjust-dir="deduct">− Deduct</button>
+          </div>
+        </div>
+        <div class="field"><label for="adjustAmountInput">Amount (KSh)</label><input type="number" id="adjustAmountInput" min="1" step="1" placeholder="e.g. 10000" /></div>
+        <div class="field"><label for="adjustReasonWdInput">Reason (required)</label><textarea id="adjustReasonWdInput" rows="2" placeholder="e.g. Opening balance, topped up from owner's pocket, bank deposit run…"></textarea></div>
+        <button class="btn btn-primary wd-confirm-btn" id="adjustSubmitBtn">Continue</button>
+      </div>
+    </section>
+
+    <!-- ===== HISTORY ===== -->
+    <section class="tab-panel hidden" id="panel-history">
+      <div class="bank-chips" id="bankChips"><button class="chip active" data-bank="all">All banks</button></div>
+      <div class="wd-toolbar">
+        <div class="filter-group">
+          <div class="field"><label for="wdFromDate">From</label><input type="date" id="wdFromDate" /></div>
+          <div class="field"><label for="wdToDate">To</label><input type="date" id="wdToDate" /></div>
+          <div class="field">
+            <label for="wdTypeFilter">Type</label>
+            <select id="wdTypeFilter"><option value="all">All</option><option value="deposit">Deposits</option><option value="withdrawal">Withdrawals</option><option value="adjustment">Adjustments</option></select>
+          </div>
+        </div>
+        <div class="export-group"><button class="btn btn-outline" id="wdExportCsvBtn">⬇ CSV</button><button class="btn btn-outline" id="wdExportPdfBtn">⬇ PDF</button></div>
+      </div>
+      <div class="summary-cards">
+        <div class="card summary-card"><span class="summary-label">Total deposits</span><span class="summary-value cash-value" id="wdSummaryDeposits">KSh 0</span></div>
+        <div class="card summary-card"><span class="summary-label">Total withdrawals</span><span class="summary-value" id="wdSummaryWithdrawals" style="color:var(--color-danger);">KSh 0</span></div>
+        <div class="card summary-card"><span class="summary-label">Transactions</span><span class="summary-value" id="wdSummaryCount">0</span></div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Transaction #</th><th>Date/time</th><th>Type</th><th>Bank / Pool</th><th>Amount</th><th>Customer</th><th>Entered by</th></tr></thead>
+          <tbody id="wdHistoryBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state hidden" id="wdHistoryEmpty"><h3>No transactions in this range</h3><p>Try a different filter or date range.</p></div>
+    </section>
+  </main>
+
+  <div class="modal-overlay hidden" id="wdConfirmOverlay">
+    <div class="modal wd-confirm-modal">
+      <div class="modal-header"><h3>Confirm transaction</h3><button class="btn btn-ghost btn-sm" id="wdConfirmClose">✕</button></div>
+      <div id="wdConfirmBody"></div>
+      <div class="modal-actions"><button class="btn btn-outline" id="wdConfirmCancel">Cancel</button><button class="btn btn-primary" id="wdConfirmSave">Confirm</button></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="lowBalanceOverlay">
+    <div class="modal low-balance-modal anim-low-stock">
+      <div class="low-stock-icon">⚠️</div>
+      <h3>Low balance alert</h3>
+      <p id="lowBalanceMessage">A balance just dropped to its alert threshold.</p>
+      <ul class="low-stock-list" id="lowBalanceList"></ul>
+      <div class="modal-actions"><button class="btn btn-primary" id="lowBalanceDismiss">Got it</button></div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/logo.js"></script>
+  <script src="../js/connectivity.js"></script>
+  <script src="../js/particles.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/withdrawals.js"></script>
+</body>
+</html>

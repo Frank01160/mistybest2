@@ -1,0 +1,43 @@
+/* ==========================================================================
+   REPORTS.CSS — Sales reports screen
+   ========================================================================== */
+
+.hidden { display: none !important; }
+
+.app-header { height: var(--header-height); display: flex; align-items: center; gap: var(--space-xl); padding: 0 var(--space-lg); background: var(--color-surface); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 50; }
+.app-nav { display: flex; gap: var(--space-lg); flex: 1; }
+.nav-link { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); text-decoration: none; padding: var(--space-sm) 0; border-bottom: 2px solid transparent; transition: color var(--transition-fast), border-color var(--transition-fast); }
+.nav-link:hover { color: var(--color-text-primary); }
+.nav-link.active { color: var(--color-brand-primary); border-bottom-color: var(--color-brand-secondary); }
+.app-header-right { display: flex; align-items: center; gap: var(--space-md); }
+.user-chip { display: flex; align-items: center; gap: var(--space-xs); font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+
+.reports-layout { max-width: var(--max-content-width); margin: 0 auto; padding: var(--space-lg); }
+.reports-toolbar { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-md); flex-wrap: wrap; margin-bottom: var(--space-lg); }
+.filter-group { display: flex; align-items: flex-end; gap: var(--space-sm); flex-wrap: wrap; }
+.filter-group .field input, .filter-group .field select { padding: 8px 10px; }
+.quick-ranges { display: flex; gap: var(--space-2xs); padding-bottom: 1px; }
+.btn-sm { padding: 6px 12px; font-size: var(--font-size-xs); }
+.export-group { display: flex; gap: var(--space-xs); }
+
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-lg); }
+.summary-card { padding: var(--space-md) var(--space-lg); display: flex; flex-direction: column; gap: var(--space-2xs); }
+.summary-label { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+.summary-value { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); }
+.cash-value { color: var(--color-payment-cash); }
+.mobile-value { color: var(--color-payment-mobile); }
+.credit-value { color: var(--color-warning); }
+
+.cash-reconcile-card { padding: var(--space-md) var(--space-lg); margin-bottom: var(--space-lg); max-width: 520px; }
+.reconcile-row { display: flex; justify-content: space-between; gap: var(--space-md); font-size: var(--font-size-sm); padding: var(--space-2xs) 0; }
+.reconcile-net { font-weight: var(--font-weight-semibold); font-size: var(--font-size-md); border-top: 1px dashed var(--color-border-strong); padding-top: var(--space-xs); margin-top: var(--space-2xs); }
+
+.sale-row { cursor: pointer; }
+#saleDetailModal { max-width: 420px; }
+.sale-detail-line { display: flex; justify-content: space-between; font-size: var(--font-size-sm); padding: var(--space-2xs) 0; }
+.sale-detail-divider { border-top: 1px dashed var(--color-border-strong); margin: var(--space-sm) 0; }
+
+@media (max-width: 640px) {
+  .app-nav { display: none; }
+  .reports-toolbar { flex-direction: column; align-items: stretch; }
+}

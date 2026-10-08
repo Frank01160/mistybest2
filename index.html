@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Misty Code POS — Sign in</title>
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/particles.css" />
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+  <script>
+    (function () {
+      var savedTheme = localStorage.getItem("mc_theme");
+      if (savedTheme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      var savedPalette = localStorage.getItem("mc_palette");
+      if (savedPalette) document.documentElement.setAttribute("data-palette", savedPalette);
+    })();
+  </script>
+
+  <div class="login-shell">
+    <div class="login-brand">
+      <div class="logo anim-logo-in" id="brandLogo">
+        <span class="logo-badge" id="logoBadge">MC</span>
+        <span class="logo-name" id="logoName" style="color:#fff;">Misty Code</span>
+      </div>
+      <div class="login-brand-copy">
+        <h1>Run your counter, not your paperwork.</h1>
+        <p>Sell, track stock, and see your numbers — from one till or a hundred, online wherever you are.</p>
+      </div>
+      <div class="login-brand-foot">Powered by Misty Code</div>
+    </div>
+
+    <div class="login-panel">
+      <div class="login-card card anim-page-in">
+        <div id="roleChoice" class="role-choice">
+          <h2>Sign in</h2>
+          <p class="login-sub">Choose how you're signing in today.</p>
+
+          <button class="role-btn" data-role="seller" type="button">
+            <span class="role-btn-icon" aria-hidden="true">🧾</span>
+            <span class="role-btn-text">
+              <span class="role-btn-title">Seller</span>
+              <span class="role-btn-desc">Sell products and view reports</span>
+            </span>
+          </button>
+
+          <button class="role-btn" data-role="manager" type="button">
+            <span class="role-btn-icon" aria-hidden="true">📦</span>
+            <span class="role-btn-text">
+              <span class="role-btn-title">Manager</span>
+              <span class="role-btn-desc">Full access — inventory, stock, settings</span>
+            </span>
+          </button>
+        </div>
+
+        <form id="loginForm" class="login-form hidden" novalidate>
+          <button type="button" id="backToRoles" class="back-link">← Back</button>
+          <h2 id="loginTitle">Seller sign in</h2>
+          <p class="login-sub" id="loginSub">Enter your password to continue.</p>
+
+          <div class="field">
+            <label for="emailInput">Email</label>
+            <input type="email" id="emailInput" autocomplete="username" readonly />
+            <span class="hint" id="emailHint">Fixed for this account. Contact the manager if this needs to change.</span>
+          </div>
+
+          <div class="field">
+            <label for="passwordInput">Password</label>
+            <input type="password" id="passwordInput" autocomplete="current-password" required />
+          </div>
+
+          <div id="loginError" class="login-error hidden" role="alert"></div>
+
+          <button type="submit" class="btn btn-primary login-submit" id="loginSubmitBtn">Sign in</button>
+          <button type="button" id="forgotPasswordBtn" class="forgot-link">Forgot password?</button>
+        </form>
+
+        <div id="forgotConfirm" class="forgot-confirm hidden">
+          <div class="forgot-icon" aria-hidden="true">✉️</div>
+          <h2>Check your email</h2>
+          <p class="login-sub">We've sent a password reset link to <strong id="forgotEmailShown"></strong>. Follow the link to set a new password, then come back here to sign in.</p>
+          <button type="button" id="forgotBackBtn" class="btn btn-outline">Back to sign in</button>
+        </div>
+      </div>
+
+      <div class="conn-badge conn-online" id="connBadge">
+        <span class="dot"></span>
+        <span id="connText">Online</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/logo.js"></script>
+  <script src="js/connectivity.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>

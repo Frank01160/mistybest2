@@ -1,0 +1,126 @@
+rules_version = '2';
+
+// ============================================================================
+// FIRESTORE SECURITY RULES — Misty Code POS
+// Paste into Firebase Console → Firestore Database → Rules, then PUBLISH.
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function myRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isManager() {
+      return isSignedIn() && myRole() == 'manager';
+    }
+
+    function isSeller() {
+      return isSignedIn() && myRole() == 'seller';
+    }
+
+    function isStaff() {
+      return isManager() || isSeller();
+    }
+
+    // users: each account can read only its own role/profile doc. No client writes.
+    match /users/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // businessConfig: staff read, manager write.
+    match /businessConfig/{docId} {
+      allow read: if isStaff();
+      allow write: if isManager();
+    }
+
+    // categories: staff read, manager write.
+    match /categories/{categoryId} {
+      allow read: if isStaff();
+      allow write: if isManager();
+    }
+
+    // products: staff read. Manager full control. A seller may only decrease
+    // stockMinorUnits (selling stock down) — nothing else.
+    match /products/{productId} {
+      allow read: if isStaff();
+      allow create, delete: if isManager();
+      allow update: if isManager() ||
+        (isSeller() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stockMinorUnits']) &&
+         request.resource.data.stockMinorUnits <= resource.data.stockMinorUnits);
+    }
+
+    // sales: staff create (attributed to themselves) and read. Immutable.
+    match /sales/{saleId} {
+      allow read: if isStaff();
+      allow create: if isStaff() && request.resource.data.servedBy == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // stockAdjustments: manager-only audit trail, immutable.
+    match /stockAdjustments/{adjustmentId} {
+      allow read: if isManager();
+      allow create: if isManager() && request.resource.data.adjustedBy == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // banks: staff read. Manager full control. Staff may only bump seqCounter by exactly 1.
+    match /banks/{bankId} {
+      allow read: if isStaff();
+      allow create, delete: if isManager();
+      allow update: if isManager() ||
+        (isStaff() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seqCounter']) &&
+         request.resource.data.seqCounter == resource.data.seqCounter + 1);
+    }
+
+    // cashTransactions: deposit/withdrawal/adjustment ledger. Immutable.
+    match /cashTransactions/{transactionId} {
+      allow read: if isStaff();
+      allow create: if isStaff() && request.resource.data.enteredBy == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // moneyPools: shared Float / Withdrawal-cash balances. Neither may go negative.
+    match /moneyPools/{poolId} {
+      allow read: if isStaff();
+      allow write: if isStaff() &&
+        request.resource.data.get('float', 0) >= 0 &&
+        request.resource.data.get('withdrawalCash', 0) >= 0;
+    }
+
+    // customers: credit customers. Both roles read/create/update (credit sales
+    // and repayments update balanceOwed); balance can never go negative.
+    // Only the manager can delete a customer.
+    match /customers/{customerId} {
+      allow read: if isStaff();
+      allow create: if isStaff();
+      allow update: if isStaff() && request.resource.data.get('balanceOwed', 0) >= 0;
+      allow delete: if isManager();
+    }
+
+    // creditLedger: credit sales and repayments. Immutable audit trail.
+    match /creditLedger/{entryId} {
+      allow read: if isStaff();
+      allow create: if isStaff() && request.resource.data.enteredBy == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // counters: sequential receipt numbering; staff may increment by exactly 1.
+    match /counters/{counterId} {
+      allow read: if isStaff();
+      allow create: if isStaff() && request.resource.data.value == 1;
+      allow update: if isStaff() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['value']) &&
+        request.resource.data.value == resource.data.value + 1;
+      allow delete: if false;
+    }
+  }
+}

@@ -1,0 +1,69 @@
+/* ==========================================================================
+   WITHDRAWALS.CSS — Deposit / Withdraw screen
+   ========================================================================== */
+
+.hidden { display: none !important; }
+
+.app-header { height: var(--header-height); display: flex; align-items: center; gap: var(--space-xl); padding: 0 var(--space-lg); background: var(--color-surface); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 50; }
+.app-nav { display: flex; gap: var(--space-lg); flex: 1; }
+.nav-link { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); text-decoration: none; padding: var(--space-sm) 0; border-bottom: 2px solid transparent; transition: color var(--transition-fast), border-color var(--transition-fast); }
+.nav-link:hover { color: var(--color-text-primary); }
+.nav-link.active { color: var(--color-brand-primary); border-bottom-color: var(--color-brand-secondary); }
+.app-header-right { display: flex; align-items: center; gap: var(--space-md); }
+.user-chip { display: flex; align-items: center; gap: var(--space-xs); font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+
+.balance-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-lg); }
+.balance-card { padding: var(--space-md) var(--space-lg); display: flex; flex-direction: column; gap: var(--space-2xs); }
+.balance-card .summary-value.low { color: var(--color-danger); }
+
+.low-balance-modal { text-align: center; max-width: 400px; }
+.low-stock-icon { font-size: 2.5rem; margin-bottom: var(--space-sm); }
+.low-stock-list { text-align: left; list-style: none; padding: 0; margin: var(--space-md) 0 0; display: flex; flex-direction: column; gap: var(--space-xs); }
+.low-stock-list li { background: var(--color-warning-soft); color: var(--color-warning); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); font-size: var(--font-size-sm); }
+
+.wd-type-badge.adjustment { background: var(--color-info-soft); color: var(--color-info); }
+
+.wd-layout { max-width: 900px; margin: 0 auto; padding: var(--space-lg); }
+
+.wd-tabs { display: flex; gap: var(--space-xs); border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-lg); }
+.tab-btn { padding: var(--space-sm) var(--space-md); background: none; border: none; border-bottom: 2px solid transparent; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); transition: color var(--transition-fast), border-color var(--transition-fast); }
+.tab-btn:hover { color: var(--color-text-primary); }
+.tab-btn.active { color: var(--color-brand-primary); border-bottom-color: var(--color-brand-primary); }
+
+.entry-card { max-width: 440px; padding: var(--space-xl); display: flex; flex-direction: column; gap: var(--space-md); }
+.field-label-standalone { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); display: block; margin-bottom: var(--space-xs); }
+
+.wd-type-toggle { display: flex; gap: var(--space-xs); }
+.wd-type-btn { flex: 1; padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--color-border-strong); background: var(--color-surface); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); transition: all var(--transition-fast); }
+.wd-type-btn.active { background: var(--color-success-soft); border-color: var(--color-success); color: var(--color-success); }
+.wd-type-btn.active[data-wd-type="deposit"] { background: var(--color-success-soft); border-color: var(--color-success); color: var(--color-success); }
+.wd-type-btn.active[data-wd-type="withdrawal"] { background: var(--color-danger-soft); border-color: var(--color-danger); color: var(--color-danger); }
+.wd-type-btn.active[data-adjust-dir="deduct"] { background: var(--color-danger-soft); border-color: var(--color-danger); color: var(--color-danger); }
+
+.wd-confirm-btn { width: 100%; padding: 14px; margin-top: var(--space-xs); }
+
+.wd-confirm-modal { max-width: 400px; }
+.wd-confirm-line { display: flex; justify-content: space-between; font-size: var(--font-size-sm); padding: var(--space-xs) 0; border-bottom: 1px solid var(--color-border); }
+.wd-confirm-line:last-child { border-bottom: none; }
+.wd-confirm-amount { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); text-align: center; padding: var(--space-md) 0; }
+
+.bank-chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-bottom: var(--space-md); }
+.chip { padding: 6px 14px; border-radius: var(--radius-pill); border: 1px solid var(--color-border-strong); background: var(--color-surface); font-size: var(--font-size-sm); color: var(--color-text-secondary); transition: all var(--transition-fast); }
+.chip:hover { border-color: var(--color-brand-primary); }
+.chip.active { background: var(--color-brand-primary); border-color: var(--color-brand-primary); color: var(--color-text-on-brand); }
+
+.wd-toolbar { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-md); flex-wrap: wrap; margin-bottom: var(--space-lg); }
+.filter-group { display: flex; align-items: flex-end; gap: var(--space-sm); flex-wrap: wrap; }
+.filter-group .field input, .filter-group .field select { padding: 8px 10px; }
+.export-group { display: flex; gap: var(--space-xs); }
+
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-lg); }
+.summary-card { padding: var(--space-md) var(--space-lg); display: flex; flex-direction: column; gap: var(--space-2xs); }
+.summary-label { font-size: var(--font-size-xs); color: var(--color-text-secondary); }
+.summary-value { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); }
+.cash-value { color: var(--color-payment-cash); }
+
+@media (max-width: 640px) {
+  .app-nav { display: none; }
+  .wd-toolbar { flex-direction: column; align-items: stretch; }
+}

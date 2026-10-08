@@ -1,0 +1,5 @@
+/* ==========================================================================
+   PARTICLES.CSS — animated background canvas
+   ========================================================================== */
+#bgCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; display: block; }
+html[data-bg="particles"] body, html[data-bg="lines"] body { background: transparent; }

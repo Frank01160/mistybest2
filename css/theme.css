@@ -1,0 +1,358 @@
+/* ==========================================================================
+   THEME.CSS — Misty Code POS
+   --------------------------------------------------------------------------
+   This is the ONLY file you should need to edit to re-skin the whole system
+   for a different business (pharmacy, feed store, cosmetics shop, etc).
+   Every page and component pulls its colors, type, spacing and radii from
+   the custom properties defined here. Nothing below is layout — layout
+   lives in each page's own CSS file.
+   ========================================================================== */
+
+:root {
+  /* ===== BRAND (Ocean Blue — default palette) ============================= */
+  --color-brand-primary: #1b4965;
+  --color-brand-primary-hover: #123449;
+  --color-brand-primary-soft: #e4edf3;
+  --color-brand-secondary: #d4a62a;
+  --color-brand-secondary-hover: #b58c1f;
+  --color-brand-secondary-soft: #faf1d9;
+
+  /* ===== SURFACE ============================================================ */
+  --color-bg: #f5f7f6;
+  --color-surface: #ffffff;
+  --color-surface-alt: #eef2f0;
+  --color-border: #dde3e1;
+  --color-border-strong: #c3cdc9;
+
+  /* ===== TEXT ================================================================ */
+  --color-text-primary: #16232b;
+  --color-text-secondary: #5b6b72;
+  --color-text-muted: #8a969b;
+  --color-text-on-brand: #ffffff;
+
+  /* ===== STATE / FEEDBACK ==================================================== */
+  --color-success: #2f7a4f;
+  --color-success-soft: #e3f1e8;
+  --color-warning: #c07a12;
+  --color-warning-soft: #fbedd4;
+  --color-danger: #b3392c;
+  --color-danger-soft: #f6e2df;
+  --color-info: #2f6690;
+  --color-info-soft: #e2edf4;
+
+  /* ===== PAYMENT TAGS ========================================================= */
+  --color-payment-cash: #2f7a4f;
+  --color-payment-cash-soft: #e3f1e8;
+  --color-payment-mobile: #2f6690;
+  --color-payment-mobile-soft: #e2edf4;
+
+  /* ===== ROLE TAGS ============================================================= */
+  --color-role-manager: #1b4965;
+  --color-role-seller: #6b4fa0;
+  --color-role-seller-soft: #ece5f5;
+
+  /* ===== TYPOGRAPHY ============================================================= */
+  --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-receipt: "Courier New", ui-monospace, monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.375rem;
+  --font-size-xl: 1.875rem;
+  --font-size-xxl: 2.5rem;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-base: 1.5;
+
+  /* ===== SPACING SCALE ========================================================== */
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* ===== RADIUS ================================================================== */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* ===== SHADOW ================================================================== */
+  --shadow-card: 0 1px 2px rgba(22, 35, 43, 0.06), 0 2px 8px rgba(22, 35, 43, 0.06);
+  --shadow-modal: 0 8px 30px rgba(22, 35, 43, 0.2);
+  --shadow-focus: 0 0 0 3px rgba(27, 73, 101, 0.25);
+
+  /* ===== LAYOUT ================================================================== */
+  --header-height: 64px;
+  --max-content-width: 1280px;
+  --receipt-width: 105mm; /* half of A4 cut vertically, portrait, height grows with content */
+
+  /* ===== MOTION ================================================================== */
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 360ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   COLOR THEMES (light mode) — 9 additional palettes, selected via
+   data-palette="name" on <html> from Manager → Settings → Color theme.
+   Ocean Blue (above) needs no override. Only brand-tied tokens change.
+   ========================================================================== */
+
+:root[data-palette="forest"] {
+  --color-brand-primary: #2f6b46; --color-brand-primary-hover: #234f34; --color-brand-primary-soft: #e2ede6;
+  --color-brand-secondary: #c98a2b; --color-brand-secondary-hover: #ad7420; --color-brand-secondary-soft: #f7ecd8;
+  --color-role-manager: #2f6b46;
+}
+:root[data-palette="sunset"] {
+  --color-brand-primary: #b13c6c; --color-brand-primary-hover: #8f2f56; --color-brand-primary-soft: #f6e3ec;
+  --color-brand-secondary: #e0954a; --color-brand-secondary-hover: #c67b34; --color-brand-secondary-soft: #fbeada;
+  --color-role-manager: #b13c6c;
+}
+:root[data-palette="ruby"] {
+  --color-brand-primary: #a3293a; --color-brand-primary-hover: #832030; --color-brand-primary-soft: #f4e0e2;
+  --color-brand-secondary: #c9942f; --color-brand-secondary-hover: #ad7c22; --color-brand-secondary-soft: #f7ecd7;
+  --color-role-manager: #a3293a;
+}
+:root[data-palette="royal"] {
+  --color-brand-primary: #5b3a8e; --color-brand-primary-hover: #472c70; --color-brand-primary-soft: #ece5f5;
+  --color-brand-secondary: #c9a02f; --color-brand-secondary-hover: #ad8722; --color-brand-secondary-soft: #f7f0d7;
+  --color-role-manager: #5b3a8e;
+}
+:root[data-palette="amber"] {
+  --color-brand-primary: #8a5a1f; --color-brand-primary-hover: #6d4718; --color-brand-primary-soft: #f3e9d8;
+  --color-brand-secondary: #2f6690; --color-brand-secondary-hover: #24506f; --color-brand-secondary-soft: #e2edf4;
+  --color-role-manager: #8a5a1f;
+}
+:root[data-palette="teal"] {
+  --color-brand-primary: #1a6b6b; --color-brand-primary-hover: #135050; --color-brand-primary-soft: #e0eeee;
+  --color-brand-secondary: #c9702f; --color-brand-secondary-hover: #ad5c22; --color-brand-secondary-soft: #f7e5d7;
+  --color-role-manager: #1a6b6b;
+}
+:root[data-palette="slate"] {
+  --color-brand-primary: #3a4148; --color-brand-primary-hover: #2a3034; --color-brand-primary-soft: #e6e8ea;
+  --color-brand-secondary: #b88a3a; --color-brand-secondary-hover: #9c7228; --color-brand-secondary-soft: #f5ecd9;
+  --color-role-manager: #3a4148;
+}
+:root[data-palette="coral"] {
+  --color-brand-primary: #c1543a; --color-brand-primary-hover: #a1432c; --color-brand-primary-soft: #f7e4de;
+  --color-brand-secondary: #2f7a7a; --color-brand-secondary-hover: #246060; --color-brand-secondary-soft: #e2f0f0;
+  --color-role-manager: #c1543a;
+}
+:root[data-palette="indigo"] {
+  --color-brand-primary: #3f4bb0; --color-brand-primary-hover: #303890; --color-brand-primary-soft: #e3e5f7;
+  --color-brand-secondary: #c98a3a; --color-brand-secondary-hover: #ad7228; --color-brand-secondary-soft: #f7ecda;
+  --color-role-manager: #3f4bb0;
+}
+
+/* ==========================================================================
+   DARK MODE — activated by data-theme="dark" on <html>.
+   ========================================================================== */
+:root[data-theme="dark"] {
+  --color-brand-primary: #4d8fb8;
+  --color-brand-primary-hover: #6ba6c9;
+  --color-brand-primary-soft: #1c2e38;
+  --color-brand-secondary: #e6bd4e;
+  --color-brand-secondary-hover: #f0cd6e;
+  --color-brand-secondary-soft: #3a3320;
+
+  --color-bg: #12181b;
+  --color-surface: #1a2226;
+  --color-surface-alt: #212b30;
+  --color-border: #2c383e;
+  --color-border-strong: #3c4a51;
+
+  --color-text-primary: #eef2f1;
+  --color-text-secondary: #a9b6ba;
+  --color-text-muted: #798488;
+  --color-text-on-brand: #0d1416;
+
+  --color-success: #4caf76;
+  --color-success-soft: #1c2f24;
+  --color-warning: #e0a83f;
+  --color-warning-soft: #352a14;
+  --color-danger: #e2685a;
+  --color-danger-soft: #3a2320;
+  --color-info: #5a9bc9;
+  --color-info-soft: #1c2b35;
+
+  --color-payment-cash: #4caf76;
+  --color-payment-cash-soft: #1c2f24;
+  --color-payment-mobile: #5a9bc9;
+  --color-payment-mobile-soft: #1c2b35;
+
+  --color-role-manager: #4d8fb8;
+  --color-role-seller: #a98fe0;
+  --color-role-seller-soft: #2a2338;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-modal: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-focus: 0 0 0 3px rgba(77, 143, 184, 0.35);
+}
+
+/* ===== COLOR THEMES (dark mode) — 9 additional palettes ===================== */
+:root[data-theme="dark"][data-palette="forest"] {
+  --color-brand-primary: #5aa87d; --color-brand-primary-hover: #74bd94; --color-brand-primary-soft: #1c2e24;
+  --color-brand-secondary: #e0ab52; --color-brand-secondary-hover: #ecbd6e; --color-brand-secondary-soft: #3a2d18;
+  --color-role-manager: #5aa87d;
+}
+:root[data-theme="dark"][data-palette="sunset"] {
+  --color-brand-primary: #e2769e; --color-brand-primary-hover: #ea93b3; --color-brand-primary-soft: #3a2230;
+  --color-brand-secondary: #f0ad6e; --color-brand-secondary-hover: #f5c18c; --color-brand-secondary-soft: #3a2c18;
+  --color-role-manager: #e2769e;
+}
+:root[data-theme="dark"][data-palette="ruby"] {
+  --color-brand-primary: #e06070; --color-brand-primary-hover: #e8808e; --color-brand-primary-soft: #3a1f22;
+  --color-brand-secondary: #e0b262; --color-brand-secondary-hover: #ecc27e; --color-brand-secondary-soft: #3a2d18;
+  --color-role-manager: #e06070;
+}
+:root[data-theme="dark"][data-palette="royal"] {
+  --color-brand-primary: #9678c9; --color-brand-primary-hover: #ab90d6; --color-brand-primary-soft: #29223a;
+  --color-brand-secondary: #e0c05e; --color-brand-secondary-hover: #ecce7e; --color-brand-secondary-soft: #3a3318;
+  --color-role-manager: #9678c9;
+}
+:root[data-theme="dark"][data-palette="amber"] {
+  --color-brand-primary: #d19a54; --color-brand-primary-hover: #dcaf78; --color-brand-primary-soft: #3a2e1a;
+  --color-brand-secondary: #5a9bc9; --color-brand-secondary-hover: #74acd3; --color-brand-secondary-soft: #1c2b35;
+  --color-role-manager: #d19a54;
+}
+:root[data-theme="dark"][data-palette="teal"] {
+  --color-brand-primary: #4fa8a8; --color-brand-primary-hover: #6cbcbc; --color-brand-primary-soft: #1c3232;
+  --color-brand-secondary: #e08a52; --color-brand-secondary-hover: #ec9f6e; --color-brand-secondary-soft: #3a2818;
+  --color-role-manager: #4fa8a8;
+}
+:root[data-theme="dark"][data-palette="slate"] {
+  --color-brand-primary: #7c8791; --color-brand-primary-hover: #97a1a9; --color-brand-primary-soft: #262b2f;
+  --color-brand-secondary: #d9ae5f; --color-brand-secondary-hover: #e5bd7e; --color-brand-secondary-soft: #3a3018;
+  --color-role-manager: #7c8791;
+}
+:root[data-theme="dark"][data-palette="coral"] {
+  --color-brand-primary: #e88a6f; --color-brand-primary-hover: #ee9f88; --color-brand-primary-soft: #3a251f;
+  --color-brand-secondary: #5aacac; --color-brand-secondary-hover: #74bcbc; --color-brand-secondary-soft: #1c3232;
+  --color-role-manager: #e88a6f;
+}
+:root[data-theme="dark"][data-palette="indigo"] {
+  --color-brand-primary: #7d86d9; --color-brand-primary-hover: #9aa2e2; --color-brand-primary-soft: #23253a;
+  --color-brand-secondary: #e0ac6e; --color-brand-secondary-hover: #ecbd88; --color-brand-secondary-soft: #3a2f1a;
+  --color-role-manager: #7d86d9;
+}
+
+/* ==========================================================================
+   BASE RESET — shared by every page
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--transition-base), color var(--transition-base);
+}
+h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: var(--font-weight-semibold); line-height: var(--line-height-tight); }
+p { margin: 0; }
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: var(--color-brand-primary); }
+img { max-width: 100%; display: block; }
+:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-radius: var(--radius-sm); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+/* ==========================================================================
+   SHARED PRIMITIVES
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs);
+  padding: 10px 18px; border-radius: var(--radius-md); border: 1px solid transparent;
+  font-weight: var(--font-weight-medium); font-size: var(--font-size-sm);
+  transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--color-brand-primary); color: var(--color-text-on-brand); }
+.btn-primary:hover { background: var(--color-brand-primary-hover); }
+.btn-secondary { background: var(--color-brand-secondary); color: #2a2004; }
+.btn-secondary:hover { background: var(--color-brand-secondary-hover); }
+.btn-outline { background: transparent; border-color: var(--color-border-strong); color: var(--color-text-primary); }
+.btn-outline:hover { border-color: var(--color-brand-primary); color: var(--color-brand-primary); }
+.btn-danger { background: transparent; border-color: var(--color-danger); color: var(--color-danger); }
+.btn-danger:hover { background: var(--color-danger-soft); }
+.btn-ghost { background: transparent; color: var(--color-text-secondary); }
+.btn-ghost:hover { background: var(--color-surface-alt); color: var(--color-text-primary); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+
+.field { display: flex; flex-direction: column; gap: var(--space-2xs); }
+.field label { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); }
+.field input, .field select, .field textarea {
+  padding: 10px 12px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm);
+  background: var(--color-surface); color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--color-brand-primary); box-shadow: var(--shadow-focus);
+}
+.field .hint { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+
+.badge { display: inline-flex; align-items: center; gap: var(--space-3xs); padding: 3px 10px; border-radius: var(--radius-pill); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
+.badge-success { background: var(--color-success-soft); color: var(--color-success); }
+.badge-warning { background: var(--color-warning-soft); color: var(--color-warning); }
+.badge-danger { background: var(--color-danger-soft); color: var(--color-danger); }
+.badge-info { background: var(--color-info-soft); color: var(--color-info); }
+.badge-cash { background: var(--color-payment-cash-soft); color: var(--color-payment-cash); }
+.badge-mobile { background: var(--color-payment-mobile-soft); color: var(--color-payment-mobile); }
+.badge-manager { background: var(--color-brand-primary-soft); color: var(--color-role-manager); }
+.badge-seller { background: var(--color-role-seller-soft); color: var(--color-role-seller); }
+
+.logo { display: inline-flex; align-items: center; gap: var(--space-sm); }
+.logo-badge {
+  display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+  border-radius: var(--radius-md); background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-secondary));
+  color: #ffffff; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); letter-spacing: 0.02em; flex-shrink: 0;
+}
+.logo-name { font-weight: var(--font-weight-semibold); font-size: var(--font-size-md); color: var(--color-text-primary); letter-spacing: -0.01em; }
+
+.conn-badge { display: inline-flex; align-items: center; gap: var(--space-2xs); padding: 4px 10px; border-radius: var(--radius-pill); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
+.conn-badge .dot { width: 7px; height: 7px; border-radius: 50%; }
+.conn-online { background: var(--color-success-soft); color: var(--color-success); }
+.conn-online .dot { background: var(--color-success); }
+.conn-offline { background: var(--color-warning-soft); color: var(--color-warning); }
+.conn-offline .dot { background: var(--color-warning); }
+
+.empty-state { text-align: center; padding: var(--space-2xl) var(--space-lg); color: var(--color-text-secondary); }
+.empty-state h3 { color: var(--color-text-primary); margin-bottom: var(--space-2xs); }
+
+.table-scroll { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+table { width: 100%; border-collapse: collapse; font-size: var(--font-size-sm); }
+th, td { text-align: left; padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+th { background: var(--color-surface-alt); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); font-size: var(--font-size-xs); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--color-surface-alt); }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(12, 18, 21, 0.5); display: flex; align-items: center; justify-content: center; padding: var(--space-md); z-index: 100; }
+.modal { background: var(--color-surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-modal); width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; padding: var(--space-lg); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-md); }
+.modal-actions { display: flex; justify-content: flex-end; gap: var(--space-sm); margin-top: var(--space-lg); }
+
+.toast-stack { position: fixed; bottom: var(--space-lg); right: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-sm); z-index: 200; }
+.toast { background: var(--color-surface); border: 1px solid var(--color-border); border-left: 4px solid var(--color-info); border-radius: var(--radius-md); box-shadow: var(--shadow-modal); padding: var(--space-sm) var(--space-md); font-size: var(--font-size-sm); min-width: 220px; max-width: 340px; }
+.toast-success { border-left-color: var(--color-success); }
+.toast-warning { border-left-color: var(--color-warning); }
+.toast-danger { border-left-color: var(--color-danger); }

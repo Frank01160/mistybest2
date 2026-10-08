@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Credit — Misty Code</title>
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/particles.css" />
+  <link rel="stylesheet" href="../css/credit.css" />
+</head>
+<body>
+  <script>
+    (function () {
+      var savedTheme = localStorage.getItem("mc_theme");
+      if (savedTheme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      var savedPalette = localStorage.getItem("mc_palette");
+      if (savedPalette) document.documentElement.setAttribute("data-palette", savedPalette);
+    })();
+  </script>
+
+  <header class="app-header">
+    <div class="logo" id="headerLogo">
+      <span class="logo-badge" id="logoBadge">MC</span>
+      <span class="logo-name" id="logoName">Misty Code</span>
+    </div>
+
+    <nav class="app-nav">
+      <a href="pos.html" class="nav-link">Sell</a>
+      <a href="reports.html" class="nav-link">Reports</a>
+      <a href="withdrawals.html" class="nav-link">Deposit/Withdraw</a>
+      <a href="credit.html" class="nav-link active">Credit</a>
+      <a href="manager.html" class="nav-link manager-only hidden">Inventory</a>
+    </nav>
+
+    <div class="app-header-right">
+      <div class="conn-badge conn-online" id="connBadge">
+        <span class="dot"></span>
+        <span id="connText">Online</span>
+      </div>
+      <div class="user-chip">
+        <span class="badge badge-seller" id="roleBadge">Seller</span>
+        <span id="userName">—</span>
+      </div>
+      <button class="btn btn-ghost" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <main class="credit-layout">
+    <div class="credit-top">
+      <div class="card total-credit-card">
+        <span class="summary-label">Total outstanding credit</span>
+        <span class="summary-value" id="totalOutstandingValue">KSh 0</span>
+      </div>
+      <button class="btn btn-primary" id="addCustomerBtn">+ Add customer</button>
+    </div>
+
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input type="search" id="customerSearchInput" placeholder="Search customers…" />
+    </div>
+
+    <div class="customer-list" id="customerList"></div>
+    <div class="empty-state hidden" id="customerEmpty">
+      <h3>No customers yet</h3>
+      <p>Add a customer here, or they'll be added automatically the first time a seller sells to them on credit.</p>
+    </div>
+  </main>
+
+  <!-- ===== Add customer modal ===== -->
+  <div class="modal-overlay hidden" id="customerModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add customer</h3>
+        <button class="btn btn-ghost btn-sm" id="customerModalClose">✕</button>
+      </div>
+      <form id="customerForm">
+        <div class="field">
+          <label for="newCustomerNameInput">Name</label>
+          <input type="text" id="newCustomerNameInput" required />
+        </div>
+        <div class="field">
+          <label for="newCustomerPhoneInput">Phone (optional)</label>
+          <input type="text" id="newCustomerPhoneInput" placeholder="e.g. 0712 345 678" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="customerCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Customer ledger modal ===== -->
+  <div class="modal-overlay hidden" id="ledgerModalOverlay">
+    <div class="modal ledger-modal">
+      <div class="modal-header">
+        <h3 id="ledgerModalTitle">Customer</h3>
+        <button class="btn btn-ghost btn-sm" id="ledgerModalClose">✕</button>
+      </div>
+      <div class="ledger-balance-row">
+        <span>Balance owed</span>
+        <span id="ledgerBalanceValue">KSh 0</span>
+      </div>
+      <p class="hint" id="ledgerDueHint"></p>
+      <button class="btn btn-primary ledger-repay-btn" id="openRepayBtn">Record repayment</button>
+      <div class="ledger-entries" id="ledgerEntries"></div>
+    </div>
+  </div>
+
+  <!-- ===== Record repayment modal ===== -->
+  <div class="modal-overlay hidden" id="repayModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Record repayment</h3>
+        <button class="btn btn-ghost btn-sm" id="repayModalClose">✕</button>
+      </div>
+      <form id="repayForm">
+        <p class="hint" id="repayCustomerHint"></p>
+        <div class="field">
+          <label for="repayAmountInput">Amount received (KSh)</label>
+          <input type="number" id="repayAmountInput" min="1" step="1" />
+        </div>
+        <div class="field">
+          <span class="field-label-standalone">Received via</span>
+          <div class="wd-type-toggle">
+            <button type="button" class="wd-type-btn active" data-repay-method="cash">💵 Cash</button>
+            <button type="button" class="wd-type-btn" data-repay-method="shop_mpesa">📲 Shop M-Pesa</button>
+            <button type="button" class="wd-type-btn" data-repay-method="manager_mpesa">📲 Manager M-Pesa</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="repayCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Overdue alert ===== -->
+  <div class="modal-overlay hidden" id="overdueOverlay">
+    <div class="modal low-balance-modal anim-low-stock">
+      <div class="low-stock-icon">⏰</div>
+      <h3>Credit due</h3>
+      <p id="overdueMessage">Some customers have credit that's now due.</p>
+      <ul class="low-stock-list" id="overdueList"></ul>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="overdueDismiss">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/logo.js"></script>
+  <script src="../js/connectivity.js"></script>
+  <script src="../js/particles.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/credit.js"></script>
+</body>
+</html>
